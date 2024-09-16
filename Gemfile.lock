@@ -105,6 +105,8 @@ GEM
     domain_name (0.6.20240107)
     drb (2.2.1)
     erubi (1.13.0)
+    faker (3.4.2)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     http-accept (1.7.0)
@@ -322,6 +324,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  faker (~> 3.4, >= 3.4.2)
   importmap-rails
   jbuilder
   pry (~> 0.14.1)

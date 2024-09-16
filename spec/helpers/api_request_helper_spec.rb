@@ -1,11 +1,11 @@
 # require './app/helpers/api_request_helper'
 require 'rails_helper'
 
-RSpec.describe ApiRequestHelper, type: :helper do
-  class Helper
-    include ApiRequestHelper
-  end
+class Helper
+  include ApiRequestHelper
+end
 
+RSpec.describe ApiRequestHelper, type: :helper do
   attr_reader :helper
 
   before do

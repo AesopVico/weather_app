@@ -55,6 +55,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
 
   gem 'pry', '~> 0.14.1'
+  gem 'faker', '~> 3.4', '>= 3.4.2'
 end
 
 group :development do
