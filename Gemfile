@@ -56,6 +56,7 @@ group :development, :test do
 
   gem 'pry', '~> 0.14.1'
   gem 'faker', '~> 3.4', '>= 3.4.2'
+  gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
 end
 
 group :development do

@@ -24,7 +24,7 @@ class WeatherApiService
   end
   # NWS weather data is returned by using proprietary grids that cover 2.5km x 2.5km
   # Using the latitude and longitude of the requested location, we can request the grid info
-  # along with the resuource paths for the requested grid
+  # along with the resource paths for the requested grid
   def request_grid_info_by_lat_lon
     url = NWS_API_URL + "#{lat},#{lon}"
     properties = get(url: url)['properties']
