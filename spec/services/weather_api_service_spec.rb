@@ -33,7 +33,9 @@ RSpec.describe WeatherApiService, type: :service do
 
   let(:grid_data_body) do
     {
-      foo: 'bar'
+      properties: {
+        foo: 'bar'
+      }
     }.to_json
   end
 
@@ -57,7 +59,8 @@ RSpec.describe WeatherApiService, type: :service do
       end
 
       it 'should request the appropriate resources based on the request' do
-        expect(response['foo']).to eq('bar')
+        expect(response.status).to eq(:success)
+        expect(response.properties['foo']).to eq('bar')
       end
 
     end
@@ -73,7 +76,8 @@ RSpec.describe WeatherApiService, type: :service do
       end
 
       it 'should request the appropriate resources based on the request' do
-        expect(response['foo']).to eq('bar')
+        expect(response.status).to eq(:success)
+        expect(response.properties['foo']).to eq('bar')
       end
 
     end
@@ -89,7 +93,8 @@ RSpec.describe WeatherApiService, type: :service do
       end
 
       it 'should request the appropriate resources based on the request' do
-        expect(response['foo']).to eq('bar')
+        expect(response.status).to eq(:success)
+        expect(response.properties['foo']).to eq('bar')
       end
 
     end

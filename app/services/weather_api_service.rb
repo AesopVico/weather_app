@@ -4,6 +4,8 @@ class WeatherApiService
 
   NWS_API_URL = "https://api.weather.gov/points/".freeze
 
+  RESPONSE_STRUCT = Struct.new(:status, :properties)
+
   attr_reader :lat, :lon, :forecast_type
 
   def initialize(lat:, lon:, forecast_type: :default)
@@ -14,14 +16,11 @@ class WeatherApiService
 
   def request_weather
     grid_info = request_grid_info_by_lat_lon
-    properties = get(url: grid_info[forecast_type])
+    weather_response = get(url: grid_info[forecast_type])
+    RESPONSE_STRUCT.new(:success, weather_response['properties'])
   end
 
   private
-
-  def parse_response
-
-  end
   # NWS weather data is returned by using proprietary grids that cover 2.5km x 2.5km
   # Using the latitude and longitude of the requested location, we can request the grid info
   # along with the resource paths for the requested grid
