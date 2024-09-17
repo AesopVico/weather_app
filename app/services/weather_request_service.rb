@@ -2,7 +2,7 @@ class WeatherRequestService
 
   attr_reader :street, :city, :state, :zip_code, :forecast_type
 
-  RESPONSE_STRUCT = Struct.new(:status, :display_name, :current_weather, :ten_day_forecast, :hourly_forecast)
+  RESPONSE_STRUCT = Struct.new(:status, :display_name, :current_weather, :seven_day_forecast, :hourly_forecast)
 
   def initialize(street:, city:, state:, zip_code:)
     @street = street
@@ -18,7 +18,7 @@ class WeatherRequestService
         coordinates_info_for_address.status, 
         coordinates_info_for_address.display_name, 
         request_current_weather,
-        request_ten_day_forecast,
+        request_seven_day_forecast,
         request_hourly_weather
       )
     else
@@ -34,8 +34,8 @@ class WeatherRequestService
     weather_api_service.current_weather
   end
 
-  def request_ten_day_forecast
-    weather_api_service.ten_day_forecast
+  def request_seven_day_forecast
+    weather_api_service.seven_day_forecast
   end
 
   def request_hourly_weather

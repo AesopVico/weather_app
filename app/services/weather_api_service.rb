@@ -13,16 +13,18 @@ class WeatherApiService
   end
 
   def current_weather
-    api_response = get(url: grid_urls[:grid_data])['properties']
+    api_response = get(url: grid_urls[:current])['properties']
     parse_current_weather(api_response: api_response)
   end
 
-  def ten_day_forecast
-    get(url: grid_urls[:ten_day])['properties']
+  def seven_day_forecast
+    api_response = get(url: grid_urls[:ten_day])['properties']
+    parse_forecast(api_response: api_response)
   end
 
   def hourly_forecast
-    get(url: grid_urls[:hourly])['properties']
+    api_response = get(url: grid_urls[:hourly])['properties']
+    parse_forecast(api_response: api_response)
   end
 
   private
@@ -40,7 +42,7 @@ class WeatherApiService
       # hourly forecast
       hourly: properties['forecastHourly'],
       # grid data is current weather and historical data
-      grid_data: properties['forecastGridData']
+      current: properties['forecastGridData']
     }
   end
 
@@ -56,8 +58,16 @@ class WeatherApiService
     }
   end
 
-  def parse_forecast
+  def parse_forecast(api_response:)
+    {
+      last_updated: DateTime.parse(api_response['updateTime']),
+      # limit the number of periods to 24, hourly has 156 total periods returned in the response
+      forecasts: api_response['periods'].first(24).map { |period| transform_keys(period: period) }
+    }
+  end
 
+  def transform_keys(period:)
+    period.transform_keys { |key| key.underscore.to_sym }
   end
 
   def format_current_temp_info(temp_info:)

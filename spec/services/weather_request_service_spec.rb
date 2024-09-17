@@ -56,7 +56,7 @@ RSpec.describe WeatherRequestService, type: :service do
       .with(**params)
       .and_return(mock_geocoding_api)
     allow(mock_weather_api).to receive(:current_weather).and_return(current_weather_api_response)
-    allow(mock_weather_api).to receive(:ten_day_forecast)
+    allow(mock_weather_api).to receive(:seven_day_forecast)
     allow(mock_weather_api).to receive(:hourly_forecast)
     allow(mock_geocoding_api).to receive(:request_coordinates).and_return(geocoding_api_response)
   end
