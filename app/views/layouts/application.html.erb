@@ -11,6 +11,17 @@
   </head>
 
   <body>
+    <%= form_with url: '/weather', method: :get do |form| %>
+      <%= form.label :street, "Street" %>
+      <%= form.text_field :street %>
+      <%= form.label :city, "City" %>
+      <%= form.text_field :city %>
+      <%= form.label :state, "State" %>
+      <%= form.text_field :state %>
+      <%= form.label :zip_code, "Zip Code" %>
+      <%= form.text_field :zip_code %>
+      <%= form.submit "Search" %>
+    <% end %>
     <%= yield %>
   </body>
 </html>
