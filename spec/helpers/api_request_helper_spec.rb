@@ -29,7 +29,7 @@ RSpec.describe ApiRequestHelper, type: :helper do
     context 'with only request URL present' do   
       subject(:response) { helper.get(url: url) }
       before do
-        expect(RestClient).to receive(:get).with(url, {}).and_return(rest_client_mock)
+        expect(RestClient).to receive(:get).with(url, params: {}).and_return(rest_client_mock)
       end
       it 'returns the body of an API response' do
         expect(response['foo']).to eq('bar')
@@ -40,7 +40,7 @@ RSpec.describe ApiRequestHelper, type: :helper do
     context 'with query params and URL present' do
       subject(:response) { helper.get(url: url, params: params) }
       before do
-        expect(RestClient).to receive(:get).with(url, params).and_return(rest_client_mock)
+        expect(RestClient).to receive(:get).with(url, params: params).and_return(rest_client_mock)
       end
       it 'returns the body of an API response' do
         expect(response['foo']).to eq('bar')

@@ -38,12 +38,22 @@ RSpec.describe WeatherApiService, type: :service do
   end
 
   describe 'request_weather' do
+
+    before do
+      expect(RestClient)
+        .to receive(:get)
+        .with(url, params: {})
+        .and_return(lat_lon_mock)
+    end
+
     subject(:response) { service.request_weather }
     context 'with default forecast' do
 
       before do
-        expect(RestClient).to receive(:get).with(url, {}).and_return(lat_lon_mock)
-        expect(RestClient).to receive(:get).with(lat_lon_body[:properties][:forecast], {}).and_return(grid_data_mock)
+        expect(RestClient)
+          .to receive(:get)
+          .with(lat_lon_body[:properties][:forecast], params: {})
+          .and_return(grid_data_mock)
       end
 
       it 'should request the appropriate resources based on the request' do
@@ -56,8 +66,10 @@ RSpec.describe WeatherApiService, type: :service do
       let(:forecast_type) { :hourly }
 
       before do
-        expect(RestClient).to receive(:get).with(url, {}).and_return(lat_lon_mock)
-        expect(RestClient).to receive(:get).with(lat_lon_body[:properties][:forecastHourly], {}).and_return(grid_data_mock)
+        expect(RestClient)
+          .to receive(:get)
+          .with(lat_lon_body[:properties][:forecastHourly], params: {})
+          .and_return(grid_data_mock)
       end
 
       it 'should request the appropriate resources based on the request' do
@@ -70,8 +82,10 @@ RSpec.describe WeatherApiService, type: :service do
       let(:forecast_type) { :grid_data }
 
       before do
-        expect(RestClient).to receive(:get).with(url, {}).and_return(lat_lon_mock)
-        expect(RestClient).to receive(:get).with(lat_lon_body[:properties][:forecastGridData], {}).and_return(grid_data_mock)
+        expect(RestClient)
+          .to receive(:get)
+          .with(lat_lon_body[:properties][:forecastGridData], params: {})
+          .and_return(grid_data_mock)
       end
 
       it 'should request the appropriate resources based on the request' do
