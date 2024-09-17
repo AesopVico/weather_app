@@ -12,7 +12,7 @@ class GeocodingApiService
 
   attr_reader :street, :city, :state, :zip_code
 
-  def initialize(street:, city:, state:, zip_code:)
+  def initialize(street: nil, city: nil, state: nil, zip_code: nil)
     @street = street
     @city = city
     @state = state

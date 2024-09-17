@@ -6,12 +6,9 @@ class WeatherController < ApplicationController
       city: filtered_params['city'],
       state: filtered_params['state'],
       zip_code: filtered_params['zip_code'],
-      forecast_type: :default
     )
     @weather_data = service.request_weather
-    respond_to do |format|
-      format.html { render html: @weather_data }
-    end
+    render html: @weather_data 
   end
 
   private
