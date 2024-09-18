@@ -51,12 +51,14 @@ class WeatherApiService
   def parse_current_weather(api_response:)
     update_time = DateTime.parse(api_response['updateTime'])
     updated_temps = api_response['temperature']['values'].select do |temp_info|
-      DateTime.parse(temp_info['validTime']) < update_time
+      DateTime.parse(temp_info['validTime']) < Time.current
     end
     
     {
       last_updated: update_time,
-      temperatures: updated_temps.map { |temp_info| format_current_temp_info(temp_info: temp_info) }
+      temperatures: updated_temps
+        .map { |temp_info| format_current_temp_info(temp_info: temp_info) }
+        .reverse
     }
   end
 

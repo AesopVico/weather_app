@@ -1,1 +1,10 @@
-<%= @weather_data.current_weather =>
+<h1><%= @weather_data.display_name %>
+
+<p><%= @cached ? 'yes' : 'no' %></p>
+<h2><%= @weather_data.current_weather[:temperatures][0][:temperature]%></h2>
+
+<%= @weather_data.current_weather %>
+
+<%= @weather_data.hourly_forecast %>
+
+<%= @weather_data.seven_day_forecast %>
