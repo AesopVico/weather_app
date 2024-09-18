@@ -1,24 +1,52 @@
-# README
+# Weather App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Description
 
-Things you may want to cover:
+A simple, lightweight forecast app that provides the current temperature and forecasts for a provided location, built completely in Ruby on Rails.
 
-* Ruby version
+## Requirements
 
-* System dependencies
+- GitHub
+- Ruby 3.3.4
+- Rails 7.1.3
 
-* Configuration
+## External Resources
 
-* Database creation
+- [National Weather Service API](https://www.weather.gov/documentation/services-web-api)
+- [Geocoding API](https://geocode.maps.co/)
 
-* Database initialization
+### Required Accounts
 
-* How to run the test suite
+- Geocoding API
+  
+  - provides API key for Address lookup
 
-* Services (job queues, cache servers, search engines, etc.)
+## Local Setup
 
-* Deployment instructions
+1. Clone the repository
+1. Install bundled gems using `bundle install`
+1. Copy `.env.sample` and name it `.env`
+1. Replace `GEOCODING_API_KEY` with your key provided by Geocoding API
+1. run the server using `rails s`
 
-* ...
+## How it Works
+
+At a high level, when an address is provided by the user, we pass that address to the Geocoding API to get the latitude and longitude of the physical address. From there, we make a request to the NWS Weather API for the current weather, as well as hourly and seven day forecasts.
+
+### Why use Geocoding?
+
+The NWS API only supports grid lookups using global coordinates. This requires us to get these coordinates from a separate service.
+
+## Known issues
+
+- Only supports forecasts for the United States
+  - Solution: Change weather API source for international requests
+- No integration tests using Capybara
+- The controller is caching the entire service instead of just the requests from the API
+  - While this does technically work, it is much more memory-intensive than just caching the API responses
+  - Solution: cache responses using a shared key generated at time of request
+
+## Future Goals
+
+- Display more weather datapoints, such as chance of precipitation, humidity, dewpoints, etc,
+- Use JavaScript to toggle visibility of the seven day and hourly forecasts
