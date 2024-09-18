@@ -1,10 +1,17 @@
 class WeatherRequestService
 
-  attr_reader :street, :city, :state, :zip_code, :forecast_type
+  attr_reader :street, :city, :state, :zip_code
 
-  RESPONSE_STRUCT = Struct.new(:status, :display_name, :current_weather, :seven_day_forecast, :hourly_forecast)
+  attr_accessor(
+    :status, 
+    :display_name, 
+    :current_weather, 
+    :current_forecast, 
+    :seven_day_forecast, 
+    :hourly_forecast
+  )
 
-  def initialize(street:, city:, state:, zip_code:)
+  def initialize(street: nil, city: nil, state: nil, zip_code: nil)
     @street = street
     @city = city
     @state = state
@@ -13,22 +20,25 @@ class WeatherRequestService
 
   def request_weather
     # get the lat/lon for a given address
-    if coordinates_info_for_address.status == :success
-      RESPONSE_STRUCT.new(
-        coordinates_info_for_address.status, 
-        coordinates_info_for_address.display_name, 
-        request_current_weather,
-        request_seven_day_forecast,
-        request_hourly_weather
-      )
-    else
-      # either too many locations found or none were found, return the status
-      # to the caller
-      RESPONSE_STRUCT.new(coordinates_info_for_address.status)
+    @status = coordinates_info_for_address.status
+    if @status  == :success
+      collate_seven_day_forecast
+      @display_name = coordinates_info_for_address.display_name
+      @current_weather = request_current_weather
+      @hourly_forecast = request_hourly_weather
     end
   end
 
   private
+
+  def collate_seven_day_forecast
+    raw_forecast = request_seven_day_forecast
+    
+    @current_forecast = raw_forecast[:forecasts].find { |forecast| forecast[:number] == 1 }
+    @seven_day_forecast = raw_forecast[:forecasts].group_by do |forecast|
+      Time.parse(forecast[:start_time]).to_date
+    end
+  end
 
   def request_current_weather
     weather_api_service.current_weather

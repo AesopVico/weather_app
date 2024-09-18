@@ -1,10 +1,56 @@
-<h1><%= @weather_data.display_name %>
+<div id="current-weather">
+  <h1><%= @weather_data.display_name %></h1>
+  <h2>Current Temperature: <%= @weather_data.current_weather[:temperatures][0][:temperature] %> degrees F</h2>
+  <h3><%= @weather_data.current_forecast[:short_forecast] %></h4>
+  <ul>
+    <% if @cached %>
+      <li>This is a cached response</li>
+    <% end %>
+    <li><%=@weather_data.current_forecast[:detailed_forecast]%></li>
+    <li>Last updated: <%= @weather_data.current_weather[:last_updated] %></li>
+  </ul>
+</div>
 
-<p><%= @cached ? 'yes' : 'no' %></p>
-<h2><%= @weather_data.current_weather[:temperatures][0][:temperature]%></h2>
+<div id='seven-day-forecast'>
+  <h2>Seven Day Forecast</h2>
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Summary</th>
+    </tr>
+    <% @weather_data.seven_day_forecast.each do |date, forecast| %>
+      <% day_forecast = forecast.find {|f| f[:is_daytime] == true} %>
+      <% night_forecast = forecast.find {|f| f[:is_daytime] == false} %>
+      <tr>
+        <td><%= date %></td>
+        <td><%= day_forecast[:temperature] %></td>
+        <td><%= night_forecast[:temperature] %></td>
+        <td>
+          Day: <%= day_forecast[:short_forecast] %>
+          <br>
+          Night: <%= night_forecast[:short_forecast] %>
+        </td>
+      </tr>
+    <% end %>
+  </table
+</div>
 
-<%= @weather_data.current_weather %>
-
-<%= @weather_data.hourly_forecast %>
-
-<%= @weather_data.seven_day_forecast %>
+<div id='hourly-forecast'>
+  <h2>Hourly Forecast</h2>
+  <table>
+    <tr>
+      <th>Time</th>
+      <th>Temperature</th>
+      <th>Summary</th>
+    </tr>
+    <% @weather_data.hourly_forecast[:forecasts].each do |forecast| %>
+      <tr>
+        <td><%= forecast[:start_time] %></td>
+        <td><%= forecast[:temperature] %></td>
+        <td><%= forecast[:short_forecast] %></td>
+      </tr>
+    <% end %>
+  </table
+</div>

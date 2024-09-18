@@ -11,6 +11,11 @@
   </head>
 
   <body>
+    <% flash.each do |type, msg| %>
+      <div>
+        <%= msg %>
+      </div>
+    <% end %>
     <%= form_with url: '/weather', method: :get do |form| %>
       <%= form.label :street, "Street" %>
       <%= form.text_field :street %>
@@ -19,7 +24,7 @@
       <%= form.label :state, "State" %>
       <%= form.text_field :state %>
       <%= form.label :zip_code, "Zip Code" %>
-      <%= form.text_field :zip_code %>
+      <%= form.text_field :zip_code, required: true %>
       <%= form.submit "Search" %>
     <% end %>
     <%= yield %>

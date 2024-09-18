@@ -44,7 +44,7 @@ RSpec.describe WeatherRequestService, type: :service do
     {
       forecast_type: 'Seven Day',
       last_updated: utc_timestamp,
-      periods: periods
+      forecasts: periods
     }
   end
 
@@ -52,7 +52,7 @@ RSpec.describe WeatherRequestService, type: :service do
     {
       forecast_type: 'Hourly',
       last_updated: utc_timestamp,
-      periods: periods
+      forecasts: periods
     }
   end
 
@@ -94,16 +94,17 @@ RSpec.describe WeatherRequestService, type: :service do
     allow(mock_geocoding_api).to receive(:request_coordinates).and_return(geocoding_api_response)
   end
   describe '#request_weather' do
-    subject(:response) { service.request_weather }
+    subject(:response) do
+      service.request_weather
+      service
+    end
 
     context 'when the request is valid' do
       it { expect(response.status).to eq(:success) }
       it { expect(response.display_name).to eq(params[:city]) }
       it { expect(response.current_weather).to eq(current_weather_api_response) }
-      it { expect(response.seven_day_forecast).to eq(seven_day_api_response) }
-      it { expect(response.seven_day_forecast[:forecast_type]).to eq(WeatherApiService::SEVEN_DAY) }
+      it { expect(response.seven_day_forecast).to be_a(Hash) }
       it { expect(response.hourly_forecast).to eq(hourly_api_response) }
-      it { expect(response.hourly_forecast[:forecast_type]).to eq(WeatherApiService::HOURLY) }
     end
     
     context 'when the location cannot be found' do
