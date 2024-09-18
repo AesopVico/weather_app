@@ -44,7 +44,7 @@ The NWS API only supports grid lookups using global coordinates. This requires u
 - No integration tests using Capybara
 - The controller is caching the entire service instead of just the requests from the API
   - While this does technically work, it is much more memory-intensive than just caching the API responses
-  - Solution: cache responses using a shared key generated at time of request
+  - Solution: cache each API response in the WeatherRequestService and have that determine whether a cache was loaded
 - Response from the `GeocodingApiService` uses a struct.
   - While this works, I would prefer to use `attr_accessor` similarly the the `WeatherRequestService` or create a dedicated response object.
 - Temperature unit is always Farenheit
