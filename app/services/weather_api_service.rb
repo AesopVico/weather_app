@@ -3,6 +3,8 @@ class WeatherApiService
   include ApiRequestHelper
 
   NWS_API_URL = "https://api.weather.gov/points/".freeze
+  HOURLY = 'Hourly'.freeze
+  SEVEN_DAY = 'Seven Day'.freeze
 
   attr_reader :lat, :lon, :unit
 
@@ -19,12 +21,12 @@ class WeatherApiService
 
   def seven_day_forecast
     api_response = get(url: grid_urls[:ten_day])['properties']
-    parse_forecast(api_response: api_response)
+    parse_forecast(api_response: api_response, forecast_type: SEVEN_DAY)
   end
 
   def hourly_forecast
     api_response = get(url: grid_urls[:hourly])['properties']
-    parse_forecast(api_response: api_response)
+    parse_forecast(api_response: api_response, forecast_type: HOURLY)
   end
 
   private
@@ -58,8 +60,9 @@ class WeatherApiService
     }
   end
 
-  def parse_forecast(api_response:)
+  def parse_forecast(api_response:, forecast_type:)
     {
+      forecast_type: forecast_type,
       last_updated: DateTime.parse(api_response['updateTime']),
       # limit the number of periods to 24, hourly has 156 total periods returned in the response
       forecasts: api_response['periods'].first(24).map { |period| transform_keys(period: period) }

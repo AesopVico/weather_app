@@ -40,6 +40,39 @@ RSpec.describe WeatherRequestService, type: :service do
     end
   end
 
+  let(:seven_day_api_response) do
+    {
+      forecast_type: 'Seven Day',
+      last_updated: utc_timestamp,
+      periods: periods
+    }
+  end
+
+  let(:hourly_api_response) do
+    {
+      forecast_type: 'Hourly',
+      last_updated: utc_timestamp,
+      periods: periods
+    }
+  end
+
+  let(:periods) do
+    14.times.map do |i|
+      is_day = i % 2 == 0 ? true : false
+      {
+        name: Faker::Lorem.word,
+        number: i + 1,
+        start_time: (utc_timestamp + 12*i.hours).strftime("%Y-%m-%dT%H:%M:%S%Z"),
+        is_day_time: is_day,
+        temperature: rand(100),
+        temperature_unit: 'F',
+        wind_speed: Faker::Lorem.sentence,
+        short_forecast: Faker::Lorem.sentence,
+        detailed_forecast: Faker::Lorem.paragraph
+      }
+    end
+  end
+
   let(:geocoding_response_symbol) { :success }
 
   let(:mock_weather_api) { instance_double(WeatherApiService) }
@@ -56,32 +89,40 @@ RSpec.describe WeatherRequestService, type: :service do
       .with(**params)
       .and_return(mock_geocoding_api)
     allow(mock_weather_api).to receive(:current_weather).and_return(current_weather_api_response)
-    allow(mock_weather_api).to receive(:seven_day_forecast)
-    allow(mock_weather_api).to receive(:hourly_forecast)
+    allow(mock_weather_api).to receive(:seven_day_forecast).and_return(seven_day_api_response)
+    allow(mock_weather_api).to receive(:hourly_forecast).and_return(hourly_api_response)
     allow(mock_geocoding_api).to receive(:request_coordinates).and_return(geocoding_api_response)
   end
   describe '#request_weather' do
     subject(:response) { service.request_weather }
-    it 'should return the weather properties of the requested location' do
-      expect(response.status).to eq(:success)
-      expect(response.display_name).to eq(params[:city])
-      expect(response.current_weather).to eq(current_weather_api_response)
+
+    context 'when the request is valid' do
+      it { expect(response.status).to eq(:success) }
+      it { expect(response.display_name).to eq(params[:city]) }
+      it { expect(response.current_weather).to eq(current_weather_api_response) }
+      it { expect(response.seven_day_forecast).to eq(seven_day_api_response) }
+      it { expect(response.seven_day_forecast[:forecast_type]).to eq(WeatherApiService::SEVEN_DAY) }
+      it { expect(response.hourly_forecast).to eq(hourly_api_response) }
+      it { expect(response.hourly_forecast[:forecast_type]).to eq(WeatherApiService::HOURLY) }
     end
+    
     context 'when the location cannot be found' do
       let(:geocoding_response_symbol) { :no_location_found }
-      it 'should return :no_location_found and no weather properties' do
-        expect(response.status).to eq(:no_location_found)
-        expect(response.display_name).to eq(nil)
-        expect(response.current_weather).to eq(nil)
-      end
+
+      it { expect(response.status).to eq(:no_location_found) }
+      it { expect(response.display_name).to eq(nil) }
+      it { expect(response.current_weather).to eq(nil) }
+      it { expect(response.seven_day_forecast).to eq(nil) }
+      it { expect(response.hourly_forecast).to eq(nil) }
     end
     context 'when multiple locations are found' do
       let(:geocoding_response_symbol) { :multiple_locations }
-      it 'should return :multiple_locations and no weather properties' do
-        expect(response.status).to eq(:multiple_locations)
-        expect(response.display_name).to eq(nil)
-        expect(response.current_weather).to eq(nil)
-      end
+      
+      it { expect(response.status).to eq(:multiple_locations) }
+      it { expect(response.display_name).to eq(nil) }
+      it { expect(response.current_weather).to eq(nil) }
+      it { expect(response.seven_day_forecast).to eq(nil) }
+      it { expect(response.hourly_forecast).to eq(nil) }
     end
   end
 end

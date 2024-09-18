@@ -41,10 +41,11 @@ RSpec.describe WeatherApiService, type: :service do
         .with(lat_lon_body[:properties][:forecast], params: {})
         .and_return(rest_client_mock)
     end
-    it 'should request the ten day forecast for the specified location' do
-      expect(response[:last_updated]).to be_a(DateTime)
-      expect(response[:forecasts]).to be_a(Array)
-      expect(response[:forecasts].length).to eq(14)
+    context 'with a valid request' do
+      it { expect(response[:last_updated]).to be_a(DateTime) }
+      it { expect(response[:forecasts]).to be_a(Array) }
+      it { expect(response[:forecasts].length).to eq(14) }
+      it { expect(response[:forecast_type]).to eq(described_class::SEVEN_DAY) }
     end
   end
 
@@ -59,10 +60,11 @@ RSpec.describe WeatherApiService, type: :service do
         .with(lat_lon_body[:properties][:forecastHourly], params: {})
         .and_return(rest_client_mock)
     end
-    it 'should request the ten day forecast for the specified location' do
-      expect(response[:last_updated]).to be_a(DateTime)
-      expect(response[:forecasts]).to be_a(Array)
-      expect(response[:forecasts].length).to eq(24)
+    context 'with a valid request' do
+      it { expect(response[:last_updated]).to be_a(DateTime) }
+      it { expect(response[:forecast_type]).to eq(described_class::HOURLY) }
+      it { expect(response[:forecasts]).to be_a(Array) }
+      it { expect(response[:forecasts].length).to eq(24) }
     end
   end
 
