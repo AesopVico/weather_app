@@ -45,8 +45,14 @@ The NWS API only supports grid lookups using global coordinates. This requires u
 - The controller is caching the entire service instead of just the requests from the API
   - While this does technically work, it is much more memory-intensive than just caching the API responses
   - Solution: cache responses using a shared key generated at time of request
+- Response from the `GeocodingApiService` uses a struct.
+  - While this works, I would prefer to use `attr_accessor` similarly the the `WeatherRequestService` or create a dedicated response object.
+- Temperature unit is always Farenheit
 
 ## Future Goals
 
-- Display more weather datapoints, such as chance of precipitation, humidity, dewpoints, etc,
-- Use JavaScript to toggle visibility of the seven day and hourly forecasts
+- Display more weather datapoints, such as chance of precipitation, humidity, dewpoints, etc.
+- Use JavaScript to toggle visibility of the seven day and hourly forecasts.
+- Preserve the provided address info in the form so the user does not have to re-enter it.
+- Move the logic determining day and night from the view to the service
+- Optimize current weather parsing functionality to be less CPU intensive
