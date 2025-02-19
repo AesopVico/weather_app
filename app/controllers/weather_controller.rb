@@ -1,7 +1,7 @@
 class WeatherController < ApplicationController
 
   def index
-    # Boolean value that determines whether the response is cached
+    # Boolean value that determines whether the response is cached or fresh
     @cached = Rails.cache.exist?(cache_key)
     # Sets @weather_data to either a fresh instance or a cached instance
     @weather_data = Rails.cache.fetch(cache_key, :expires => 30.minutes) do
